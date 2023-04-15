@@ -1,0 +1,10 @@
+services:
+  gitserver:
+    build: ./container
+    image: mwni/gitserver
+    container_name: gitserver
+    restart: always
+    ports:
+      - 6080:80
+    volumes:
+      - ./repos:/root/repos
