@@ -1,13 +1,13 @@
 #!/bin/bash
 
-REPO_PATH="${PATH_INFO#*/}"
-REPO_DIR="$GIT_PROJECT_ROOT/$REPO_PATH"
+REPO_DIR="${PATH_INFO#/}"
+REPO_DIR="${REPO_DIR%%/*}"
+REPO_DIR="$GIT_PROJECT_ROOT/$REPO_DIR"
 
 if [ ! -d "$REPO_DIR" ]; then
-	if [ "$REQUEST_METHOD" = "POST" ]; then
+	if [[ "$REQUEST_METHOD" = "GET" && "$QUERY_STRING" = "service=git-receive-pack" ]] || [ "$REQUEST_METHOD" = "POST" ]; then
 		mkdir -p "$REPO_DIR"
-		cd "$REPO_DIR"
-		git init --bare --initial-branch=main
+		git init $REPO_DIR --bare --initial-branch=main &> /dev/null
 	fi
 fi
 
